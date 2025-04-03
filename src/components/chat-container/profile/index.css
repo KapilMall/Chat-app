@@ -1,0 +1,37 @@
+.profile{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        img {
+            border-radius: 50%;
+            align-items: 1/1;
+            height: 40px;
+            width: 40px;
+            object-fit: cover;
+        }
+        
+        .user-name {
+            color: #fff;
+            font-size: 0.8rem;
+        } 
+    }
+
+    .user-options {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+}
+
+
+

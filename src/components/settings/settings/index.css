@@ -1,0 +1,44 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    color: #fff;
+    padding: 1rem;
+
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1;
+
+        .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            height: max-content;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem .7rem;
+            color: #fff;
+        }
+
+        .block-user {
+            background-color: rgba(255, 38, 0, 0.823);
+        }
+
+        .logout {
+            background-color: #008CBA;
+        }
+    }
+    
+}

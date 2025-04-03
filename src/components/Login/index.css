@@ -1,0 +1,44 @@
+.login-container{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    .separator{
+        height: 100%;
+        background-color: red;
+        width: 2px;
+    }
+
+    .item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            width: 50%;
+
+            label {
+                align-self: flex-start;
+                cursor: pointer;
+            }
+
+            input {
+                padding: 0.8rem 1rem;
+                background-color: rgba(17, 25, 40, 0.75);
+                border-radius: 12px;
+                border: none;
+                width: 100%;
+            }
+        }
+    }
+
+}

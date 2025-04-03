@@ -1,0 +1,55 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Verdana, Geneva, sans-serif;
+}
+
+body { 
+  background: url('/bg.jpg');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container{
+  display: flex;
+  width: 90vw;
+  height: 90vh;
+  border-radius: 12px;
+  background-color: rgba(17, 25, 40, 0.75);
+  backdrop-filter: blur(19px) saturate(180%);
+}
+
+.chat-container{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 25%;
+}
+
+.messages-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  border-left: 1px solid #dddddd35;
+
+  .messagesInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+}
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 25%;
+  border-left: 1px solid #dddddd35;
+}
+
+button {
+  cursor: pointer;
+}

@@ -1,0 +1,41 @@
+.chat-list {
+    display: flex;
+    flex: 1;
+
+    .chat-list-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .chat-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            color: #fff;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dddddd35;
+            padding: 1rem;
+    
+            img {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+            }
+    
+            .name {
+                font-size: 0.9rem;
+            }
+    
+            .message {
+                font-size: 0.7rem;
+            }
+        }
+    }
+
+    .chat-list-container:first-child {
+        padding-top: .5rem;
+    }
+   
+}

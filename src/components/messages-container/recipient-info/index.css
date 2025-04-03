@@ -1,0 +1,38 @@
+.recipient-container {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #dddddd35;;
+    padding: 1rem;
+
+    .info {
+        display: flex;
+        gap: 1rem;
+
+        img {
+            width:60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+
+        .name-bio {
+            color: #fff;
+            .name {
+                font-size: 1.2rem;
+            }
+
+            .bio {
+                font-size: 0.8rem;
+            }
+        }
+
+    }
+
+    .comm-options {
+        display: flex;
+        align-items: center;
+        gap: 1.8rem;
+    }
+}

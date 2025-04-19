@@ -1,4 +1,5 @@
-import { useState } from 'react';
+// import { useState } from 'react';
+import { useEffect } from 'react';
 import { Chat } from './components/chat-container/chat/Chat';
 import { Profile } from './components/chat-container/profile/Profile';
 import { SearchBar } from './components/chat-container/searchBar/SearchBar';
@@ -9,13 +10,28 @@ import { SendMessage } from './components/messages-container/send-message/SendMe
 import { Settings } from './components/settings/settings/Settings';
 import { UserInfo } from './components/settings/userInfo/UserInfo';
 import './index.css';
+import { ToastContainer } from 'react-toastify';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './lib/firebase';
 
 function App() {
 
   // const [user, setUser] = useState('')
-  const user = true;
+  const user = false;
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      console.log(user);
+    })
+
+    return () => {
+      unsub();
+    }
+  });
 
   return (
+    <>
+      <ToastContainer />
       <div className="container">
         {
           user ? 
@@ -41,6 +57,7 @@ function App() {
         <Login />
         }
       </div>
+    </>
   )
 }
 

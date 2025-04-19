@@ -6,8 +6,8 @@
     height: 100%;
 
     .separator{
-        height: 100%;
-        background-color: red;
+        height: 85%;
+        background-color: rgba(255, 255, 255, 0.064);
         width: 2px;
     }
 
@@ -27,8 +27,16 @@
             width: 50%;
 
             label {
-                align-self: flex-start;
                 cursor: pointer;
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                }
             }
 
             input {
@@ -37,6 +45,19 @@
                 border-radius: 12px;
                 border: none;
                 width: 100%;
+                color: #fff;
+            }
+
+            input:focus{
+                outline: none;
+            }
+
+            button {
+                padding: 0.5rem 1rem;
+                border-radius: 5px;
+                background-color: #008CBA;
+                color: #fff;
+                border: none;
             }
         }
     }

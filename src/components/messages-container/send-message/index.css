@@ -21,6 +21,11 @@
             color: #fff;
             border-radius: 5px;
             width: 100%;
+
+            &:disabled {
+                background-color: rgba(0, 0, 0, 0.1);
+                cursor: not-allowed;
+                }
         }
     }
 
@@ -41,6 +46,12 @@
             color: #fff;
             padding: .5rem 1rem;
             border-radius: 5px;
+
+            &:disabled {
+            background-color: #008bba54;
+            cursor: not-allowed;
+            }
+
         }
 
         .emoji {

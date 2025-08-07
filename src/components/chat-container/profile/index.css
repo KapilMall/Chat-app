@@ -14,14 +14,15 @@
         img {
             border-radius: 50%;
             align-items: 1/1;
-            height: 40px;
-            width: 40px;
+            height: 50px;
+            width: 50px;
             object-fit: cover;
         }
         
         .user-name {
             color: #fff;
-            font-size: 0.8rem;
+            font-size: 1.5rem;
+            font-weight: bold;
         } 
     }
 

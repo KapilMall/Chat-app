@@ -1,87 +1,66 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './index.css'
+import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
+import { useAppSelector } from '../../../store/typedHook';
+import { v4 as uuidv4 } from 'uuid';
+
+interface Message {
+    senderId: string,
+    text: string,
+    updatedAt: Timestamp,
+}
+interface Chats {
+    createdAt: Timestamp,
+    message: Message[]
+}
 
 export const Messages = () => {
+
+    const [chats, setChats] = useState<Chats>();
+
+    const id = useAppSelector((state) => state.chatReducer?.chatId)
+    const currentUser = useAppSelector((state) => state.userReducer.currentUser)
+
+
     // to make sure that whenever messaged are rendered, it will automatically scroll to the latest message
     const endRef = useRef<HTMLDivElement | null>(null);
+    
 
     useEffect(() => {
         endRef.current?.scrollIntoView({ behavior: "smooth"})
     });
 
+    // Getting realtime data from the chats collection 
+    useEffect(() => {
+        const unsub = onSnapshot(doc(db, "chats", id), async(res) => {
+            setChats(res.data() as Chats)
+        });
+
+        return () => {
+            unsub();
+        }
+    }, [id])
+
     return (
         <>
             <div className='messageBox-container'>
-                <div className='message'>
-                    <img src='./avatar.png'/>
-                    <div className='text'>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>7 mins ago</span>
-                    </div>
-                </div>
-                <div className='message own'>
-                    <div className='text'>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>15 mins ago</span>
-                    </div>
-                </div>
-                <div className='message'>
-                    <img src='./avatar.png'/>
-                    <div className='text'>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>16 mins ago</span>
-                    </div>
-                </div>
-                <div className='message own'>
-                    <div className='text'>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>5 mins ago</span>
-                    </div>
-                </div>
-                <div className='message'>
-                    <img src='./avatar.png'/>
-                    <div className='text'>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>16 mins ago</span>
-                    </div>
-                </div>
-                <div className='message own'>
-                    <div className='text'>
-                        <img src='https://i.pinimg.com/736x/73/81/53/738153a375912728cc2e8d04dd4f4c69.jpg' alt='image'/>
-                        <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla id scelerisque metus, 
-                        sed euismod justo. Mauris porta orci ac finibus consequat. Cras facilisis, 
-                        sapien ac mollis accumsan, eros tellus fringilla lorem, 
-                        eu efficitur mi elit ut arcu.s
-                        </p>
-                        <span>5 mins ago</span>
-                    </div>
-                </div>
+                {
+                    chats?.message?.map((msg: any) => {
+                        return (
+                            <div className={ msg.senderId === currentUser.id ? 'message own' : 'message'} key={uuidv4()}>
+                                <div className='text'>
+                                    { msg.image && <img src={msg.image} alt='image'/>}
+                                    { msg.text && <p>{msg.text}</p> }
+                                    {/* <span>{msg.createdAt}</span> */}
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                {
+                    
+                }
                 <div ref={endRef}></div>
             </div>
         </>

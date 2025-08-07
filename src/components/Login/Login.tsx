@@ -5,6 +5,8 @@ import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'fire
 import { auth, db } from '../../lib/firebase';
 import axios from 'axios';
 import { doc, setDoc } from 'firebase/firestore';
+import { useAppDispatch } from '../../store/typedHook';
+import { setLoader } from '../../actions/appAction';
 
 interface IAvatar {
     file: File | null;
@@ -22,7 +24,8 @@ export const Login = () => {
         password: '',
     })
     const [avatar, setAvatar] = useState<IAvatar>();
-    const [loader, setLoader] = useState(false);
+    // const [loader, setLoader] = useState(false);
+    const dispatch = useAppDispatch();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -54,7 +57,8 @@ export const Login = () => {
     const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log('signing up...');
-        setLoader(true);
+        // setLoader(true);
+        dispatch(setLoader(true));
         
         if (!avatar?.file) {
             toast('Please upload an image!');
@@ -66,12 +70,12 @@ export const Login = () => {
             console.log('create user response: ', res);
             // uploading avatar to cloudinary
             const avatarFormData = new FormData();
-            avatarFormData.append('file', avatar.file);
-            avatarFormData.append('upload_preset', 'Avatar');
-            avatarFormData.append('cloud_name', 'dtructx5e');
-            
+                avatarFormData.append('file', avatar.file);
+                avatarFormData.append('upload_preset', 'Avatar');
+                avatarFormData.append('cloud_name', 'dtructx5e');
+
             const response = await axios.post('https://api.cloudinary.com/v1_1/dtructx5e/image/upload', avatarFormData);
-            console.log(`image: `, response );
+            console.log(`image: `, response);
 
             await setDoc(doc(db, "users", res.user.uid), {
                 username: signUpInfo.username,
@@ -79,15 +83,16 @@ export const Login = () => {
                 password: signUpInfo.password,
                 id: res.user.uid,
                 blocked: [],
-                avatar: response.data.url
+                avatar: response.data.url //getting avatar url from cloudinary
               });
 
+            // setting chat to empty array after user has signed up successfully.  
             await setDoc(doc(db, "userschat", res.user.uid), {
-                chat: [],
+                chats: [],
               });
 
             toast.success('Signed up successfully, You can now log in!');
-            setLoader(false);
+            // setLoader(false);
             setSignUpInfo({
                 username: '',
                 email: '',
@@ -97,21 +102,22 @@ export const Login = () => {
             toast.error('Something went wrong while signing up!');
             console.log('Error signing up: ', error)
         } finally {
-            setLoader(false);
+            dispatch(setLoader(false));
         }
     }
 
     const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         console.log('logging in...');
-        setLoader(true);
+        // setLoader(true);
+        dispatch(setLoader(true));
         //sign in with email and password
 
         try {
             const res = await signInWithEmailAndPassword(auth, loginInInfo.username, loginInInfo.password)
             console.log('login res: ', res);
             toast('Logged in successfully!');
-            setLoader(false);
+            // setLoader(false);
             setLoginInfo({
                 username: '',
                 password: '',
@@ -120,7 +126,7 @@ export const Login = () => {
             console.log('error signing in: ', error);
             toast('error signing in...');
         } finally {
-            setLoader(false);
+            dispatch(setLoader(false));
         }
 
     }
@@ -133,7 +139,8 @@ export const Login = () => {
                     <form>
                         <input type="text" placeholder="Enter username" name='username' value={loginInInfo.username} onChange={handleLoginChange}/>
                         <input type="password" placeholder="Enter password" name='password' value={loginInInfo.password} onChange={handleLoginChange}/>
-                        <button type='submit' onClick={handleLogin}>{loader ? 'Loading...' : 'Login'}</button>
+                        {/* <button type='submit' onClick={handleLogin}>{loader ? 'Loading...' : 'Login'}</button> */}
+                        <button type='submit' onClick={handleLogin}>Login</button>
                     </form>
                 </div>
                 <div className="separator"></div>
@@ -148,7 +155,8 @@ export const Login = () => {
                         <input type="text" placeholder="Enter username" name='username' value={signUpInfo.username} onChange={handleChange}/>
                         <input type="email" placeholder="Enter email" name='email' value={signUpInfo.email} onChange={handleChange}/>
                         <input type="password" placeholder="Enter password" name='password' value={signUpInfo.password} onChange={handleChange}/>
-                        <button type='submit' onClick={handleSignup}>{loader ? 'Loading...' : 'Sign up'}</button>
+                        {/* <button type='submit' onClick={handleSignup}>{loader ? 'Loading...' : 'Sign up'}</button> */}
+                        <button type='submit' onClick={handleSignup}>Sign up</button>
                     </form>
                 </div>
             </div>

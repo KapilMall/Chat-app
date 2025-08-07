@@ -17,6 +17,7 @@
             padding-bottom: 1rem;
             border-bottom: 1px solid #dddddd35;
             padding: 1rem;
+            cursor: pointer;
     
             img {
                 width: 40px;

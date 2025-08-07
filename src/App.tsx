@@ -1,5 +1,5 @@
 // import { useState } from 'react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Chat } from './components/chat-container/chat/Chat';
 import { Profile } from './components/chat-container/profile/Profile';
 import { SearchBar } from './components/chat-container/searchBar/SearchBar';
@@ -12,36 +12,85 @@ import { UserInfo } from './components/settings/userInfo/UserInfo';
 import './index.css';
 import { ToastContainer } from 'react-toastify';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './lib/firebase';
+import { auth, db } from './lib/firebase';
+import { setCurrentUser } from './actions/userAction';
+import { setLoader } from './actions/appAction';
+import { doc, getDoc } from 'firebase/firestore';
+import { useAppDispatch, useAppSelector } from './store/typedHook';
 
 function App() {
 
-  // const [user, setUser] = useState('')
-  const user = false;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const dispatch = useAppDispatch()
+  const isLoading = useAppSelector(state => state.appReducer.isLoading);
+  const currentUser = useAppSelector(state => state.userReducer.currentUser);
+
+  const chatId = useAppSelector((state) => state.chatReducer?.chatId)
+
+  const fetchUserInfo = useCallback(async(uid: string) => {
+    try {
+      // fetching user info and setting currentUser state with the fetched data
+
+      const docRef = doc(db, 'users', uid);
+      const docSnap = await getDoc(docRef);
+
+      if(docSnap.exists()){
+        console.log('docSnap: ', docSnap.data());
+        dispatch(setCurrentUser(docSnap.data()));
+        dispatch(setLoader(false));
+      } else {
+        console.log('No such document exists!');
+        dispatch(setCurrentUser(null));
+        dispatch(setLoader(false));
+      }
+    } catch (error) {
+      console.log('error fetching user information: ', error);
+    }
+  }, [currentUser]);
+
+  // handle search 
+
+  const handleSearch = (text: string) => {
+    setSearchQuery(text);
+  }
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      console.log(user);
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      console.log('current user: ', user);
+
+      // if no uid exists that means user is logged out...
+      if(!user?.uid) {
+        dispatch(setCurrentUser(null));
+        dispatch(setLoader(false));
+        return;
+      }
+      fetchUserInfo(user.uid);      
     })
 
+    // if you are listening on a real time data, make sure to use real time data.
     return () => {
       unsub();
     }
-  });
+  }, []);
 
   return (
     <>
       <ToastContainer />
-      <div className="container">
+      { isLoading ? <div className='loading'>Loading...</div> : 
+        <div className="container">
         {
-          user ? 
+          currentUser ? 
           <>
             <div className="chat-container">
               <Profile />
-              <SearchBar />
-              <Chat />
+              <SearchBar handleSearch={handleSearch}/>
+              <Chat searchQuery={searchQuery}/>
             </div>
-            <div className='messages-container'>
+            {
+              chatId && 
+
+              <div className='messages-container'>
               <div className='messagesInfo'>
                 <RecipientInfo />
                 <Messages />
@@ -52,11 +101,13 @@ function App() {
                 <Settings />
               </div>
             </div>
+            }
           </>
         : 
         <Login />
         }
-      </div>
+        </div>
+     }
     </>
   )
 }
